@@ -1,0 +1,10 @@
+GET http://127.0.0.1:5000/scan
+###
+POST http://127.0.0.1:5000/scan/add
+Content-Type: application/json
+
+{
+    "ip": "192.168.100.53",
+    "mac": "b8:27:eb:c1:38:63",
+    "name": "Raspberry"
+}

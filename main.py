@@ -1,4 +1,4 @@
-from flask import Flask, render_template_string, request, jsonify
+from flask import Flask, render_template_string, request
 # from telegram import Bot, Update
 # from telegram.ext import Dispatcher, CommandHandler, MessageHandler, filters
 import threading
@@ -14,7 +14,6 @@ def periodic_scan():
     # Escanea la red y carga los dispositivos guardados
     results = scan_network("192.168.100.1/24")
     devices = get_all_devices()
-    print(devices)
 
     # Normalizar la lista de dispositivos guardados a un lookup por mac (minúsculas)
     # devices es una lista de tuplas: (id, ip, mac, name, fecha)
@@ -83,8 +82,18 @@ def home():
 def scan_network_route():
     # Escanea la red y carga los dispositivos guardados
     results = scan_network("192.168.100.1/24")
+    for r in results:
+        if not isinstance(r, dict):
+            continue
+        ip = r.get("ip")
+        mac = r.get("mac")
+        if not ip or not mac:
+            continue
+        insert_device(ip, mac)
+    
     devices = get_all_devices()
     # print(devices)
+
 
     # Normalizar la lista de dispositivos guardados a un lookup por mac (minúsculas)
     # devices es una lista de tuplas: (id, ip, mac, name, fecha)
